@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleveland Heart Disease Predictor (13 Features)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #374151; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto bg-gray-800 p-6 sm:p-10 rounded-xl shadow-2xl">
+        <header class="text-center mb-8 border-b border-gray-700 pb-4">
+            <h1 class="text-4xl font-extrabold text-green-400 mb-2">Heart Disease Risk Predictor (Cleveland Data)</h1>
+            <p class="text-gray-400">Model uses 13 clinical features for diagnosis (1=Disease, 0=No Disease).</p>
+        </header>
+
+        <form id="predictionForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+
+            <!-- Feature Group 1: Clinical Demographics -->
+            <div class="md:col-span-2">
+                <h2 class="text-xl font-semibold mb-4 text-green-300 border-b border-gray-700 pb-1">1. Clinical & Demographics</h2>
+            </div>
+            
+            <!-- 1. age -->
+            <div>
+                <label for="age" class="block text-sm font-medium text-gray-300">Age (years):</label>
+                <input type="number" id="age" value="55" required min="29" max="77" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 2. sex -->
+            <div>
+                <label for="sex" class="block text-sm font-medium text-gray-300">Sex (1=Male, 0=Female):</label>
+                <input type="number" id="sex" value="1" required min="0" max="1" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 3. cp (Chest Pain Type) -->
+            <div>
+                <label for="cp" class="block text-sm font-medium text-gray-300">Chest Pain Type (1-4, 4=Worst):</label>
+                <input type="number" id="cp" value="3" required min="1" max="4" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 4. trestbps (Resting Blood Pressure) -->
+            <div>
+                <label for="trestbps" class="block text-sm font-medium text-gray-300">Resting BP (mm Hg):</label>
+                <input type="number" id="trestbps" value="130" required min="90" max="200" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+            
+            <!-- 5. chol (Serum Cholestoral) -->
+            <div>
+                <label for="chol" class="block text-sm font-medium text-gray-300">Cholesterol (mg/dL):</label>
+                <input type="number" id="chol" value="240" required min="120" max="560" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 6. fbs (Fasting Blood Sugar) -->
+            <div>
+                <label for="fbs" class="block text-sm font-medium text-gray-300">Fasting Sugar > 120 (1=True, 0=False):</label>
+                <input type="number" id="fbs" value="0" required min="0" max="1" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- Feature Group 2: ECG & Exercise -->
+            <div class="md:col-span-2 mt-6">
+                <h2 class="text-xl font-semibold mb-4 text-green-300 border-b border-gray-700 pb-1">2. Diagnostics & Metrics</h2>
+            </div>
+            
+            <!-- 7. restecg (Resting ECG) -->
+            <div>
+                <label for="restecg" class="block text-sm font-medium text-gray-300">Resting ECG (0-2):</label>
+                <input type="number" id="restecg" value="1" required min="0" max="2" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 8. thalach (Max Heart Rate) -->
+            <div>
+                <label for="thalach" class="block text-sm font-medium text-gray-300">Max Heart Rate (bpm):</label>
+                <input type="number" id="thalach" value="150" required min="70" max="210" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 9. exang (Exercise Induced Angina) -->
+            <div>
+                <label for="exang" class="block text-sm font-medium text-gray-300">Exercise Angina (1=Yes, 0=No):</label>
+                <input type="number" id="exang" value="0" required min="0" max="1" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 10. oldpeak (ST depression) -->
+            <div>
+                <label for="oldpeak" class="block text-sm font-medium text-gray-300">ST Depression (0.0 to 6.2):</label>
+                <input type="number" id="oldpeak" value="1.5" required min="0" max="7" step="0.1" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 11. slope (Peak Exercise ST Segment) -->
+            <div>
+                <label for="slope" class="block text-sm font-medium text-gray-300">Peak ST Slope (1-3):</label>
+                <input type="number" id="slope" value="2" required min="1" max="3" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 12. ca (Number of major vessels) -->
+            <div>
+                <label for="ca" class="block text-sm font-medium text-gray-300">Num Major Vessels (0-3):</label>
+                <input type="number" id="ca" value="0" required min="0" max="3" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+
+            <!-- 13. thal (Thalassaemia) -->
+            <div>
+                <label for="thal" class="block text-sm font-medium text-gray-300">Thal (3=Normal, 6=Fixed, 7=Reversable):</label>
+                <input type="number" id="thal" value="3" required min="3" max="7" class="mt-1 block w-full bg-gray-700 border-gray-600 rounded-lg shadow-sm focus:border-green-500 focus:ring-green-500 p-3 text-lg">
+            </div>
+            
+            <!-- Result Area and Button -->
+            <div class="md:col-span-2 pt-6 border-t border-gray-700 mt-4">
+                <button type="submit" id="predictButton" class="w-full py-3 px-4 rounded-lg shadow-md text-lg font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-gray-900 transition duration-150 ease-in-out">
+                    Predict Risk
+                </button>
+            </div>
+
+            <!-- Result Display Area -->
+            <div class="md:col-span-2 mt-6">
+                <div id="resultArea" class="hidden bg-gray-700 p-6 rounded-lg shadow-xl border-l-4 border-green-500">
+                    <h3 class="text-2xl font-bold mb-3 text-white">Prediction Result:</h3>
+                    <p id="resultText" class="text-lg font-semibold mb-2"></p>
+                    <div id="resultDetails" class="text-gray-300 text-sm"></div>
+                    <p id="errorFeedback" class="text-sm text-red-400 mt-2 hidden"></p>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- START OF JAVASCRIPT LOGIC -->
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const button = document.getElementById('predictButton');
+            const resultArea = document.getElementById('resultArea');
+            const resultText = document.getElementById('resultText');
+            const resultDetails = document.getElementById('resultDetails');
+            const errorFeedback = document.getElementById('errorFeedback');
+            
+            button.disabled = true;
+            button.textContent = 'Predicting...';
+            resultArea.classList.add('hidden');
+            errorFeedback.classList.add('hidden');
+
+            // --- 13 FEATURES ---
+            const featureIds = [
+                'age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 
+                'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'
+            ];
+            
+            const features = featureIds.map(id => {
+                const input = document.getElementById(id);
+                // Ensure correct type conversion for the API
+                return parseFloat(input.value); 
+            });
+
+            // The API endpoint is the root path of the deployed service
+            const API_URL = '/predict'; 
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ features: features }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API returned status ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(`API Error: ${data.error}`);
+                }
+                
+                // Update result text based on prediction (1 = Disease)
+                const isRisk = data.prediction === 1;
+                resultText.textContent = isRisk ? 'HIGH Likelihood of Heart Disease (1)' : 'LOW Likelihood of No Disease (0)';
+                resultText.className = isRisk ? 'text-xl font-bold text-red-400 mb-2' : 'text-xl font-bold text-green-400 mb-2';
+                resultArea.style.borderColor = isRisk ? '#f87171' : '#4ade80'; // Tailwind red-400 or green-400
+
+                // Update detailed probabilities
+                resultDetails.innerHTML = `
+                    <p>Disease Probability: <span class="${isRisk ? 'text-red-300' : 'text-green-300'} font-semibold">${(data.probability_disease * 100).toFixed(2)}%</span></p>
+                    <p>No Disease Probability: <span class="text-gray-300 font-semibold">${(data.probability_no_disease * 100).toFixed(2)}%</span></p>
+                    <p class="text-xs mt-1">Model: ${data.model_used}</p>
+                `;
+
+                resultArea.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Prediction failed:", error);
+                errorFeedback.textContent = `Error: Could not process prediction. Check server logs. (${error.message})`;
+                errorFeedback.classList.remove('hidden');
+                resultArea.classList.remove('hidden');
+                resultText.textContent = 'Prediction Failed';
+                resultText.className = 'text-xl font-bold text-red-400 mb-2';
+                resultDetails.innerHTML = '';
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Predict Risk';
+            }
+        });
+    </script>
+</body>
+</html>
